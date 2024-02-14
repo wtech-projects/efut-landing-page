@@ -3,3 +3,9 @@ services:
   landing-page:
     image: ghcr.io/wtech-projects/efut-landing-page:master
     restart: always
+    networks:
+      - cb_network
+    
+networks:
+  cb_network:
+    external: true
