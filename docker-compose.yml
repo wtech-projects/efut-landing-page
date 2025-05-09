@@ -2,6 +2,7 @@ version: '3.8'
 services:
   landing-page:
     image: ghcr.io/wtech-projects/efut-landing-page:master
+    restart: always
     networks:
       - cb_network
     
