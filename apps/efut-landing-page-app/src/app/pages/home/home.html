@@ -1,0 +1,240 @@
+<main class="landing">
+  <section class="hero-shell">
+    <div class="hero-content" id="top">
+      <div class="brand-hero">
+        <img src="/gramados-virtuais.png" alt="Logo Gramados Virtuais" class="brand-logo" />
+      </div>
+      <p class="hero-kicker">Plataforma para gestores de ligas virtuais</p>
+      <h1>Sua liga virtual, operada com padrao profissional.</h1>
+      <p class="hero-description">
+        Mercado, jogos, ranking e financeiro no mesmo sistema.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#planos" class="btn btn-primary">Criar uma liga</a>
+        <a href="#como-funciona" class="btn btn-ghost">Ver demonstracao</a>
+      </div>
+
+    </div>
+
+    <div class="hero-panel">
+      <p class="comments-kicker">Comentarios de clientes</p>
+      <div class="comments-track">
+        <div class="comments-row comments-row-right">
+          @for (comment of heroComments; track $index) {
+            <article class="comment-card">
+              <p>"{{ comment.quote }}"</p>
+              <div class="comment-meta">
+                <span class="comment-avatar" aria-hidden="true"></span>
+                <span>{{ comment.author }}</span>
+              </div>
+            </article>
+          }
+          @for (comment of heroComments; track $index) {
+            <article class="comment-card">
+              <p>"{{ comment.quote }}"</p>
+              <div class="comment-meta">
+                <span class="comment-avatar" aria-hidden="true"></span>
+                <span>{{ comment.author }}</span>
+              </div>
+            </article>
+          }
+        </div>
+        <div class="comments-row comments-row-left">
+          @for (comment of heroComments; track $index) {
+            <article class="comment-card">
+              <p>"{{ comment.quote }}"</p>
+              <div class="comment-meta">
+                <span class="comment-avatar" aria-hidden="true"></span>
+                <span>{{ comment.author }}</span>
+              </div>
+            </article>
+          }
+          @for (comment of heroComments; track $index) {
+            <article class="comment-card">
+              <p>"{{ comment.quote }}"</p>
+              <div class="comment-meta">
+                <span class="comment-avatar" aria-hidden="true"></span>
+                <span>{{ comment.author }}</span>
+              </div>
+            </article>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section trusted">
+    <p>Para ligas de FIFA, eFootball e comunidades competitivas</p>
+  </section>
+
+  <section class="section" id="recursos">
+    <div class="section-head">
+      <p class="section-kicker">Recursos principais</p>
+      <h2>Tudo para rodar sua liga sem planilhas</h2>
+    </div>
+    <div class="feature-grid">
+      @for (feature of features; track $index) {
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            @switch (feature.icon) {
+              @case ('league') {
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M4 7h16M4 12h16M4 17h10" />
+                </svg>
+              }
+              @case ('market') {
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M4 8h16M7 8v8h10V8M9 16v2h6v-2" />
+                </svg>
+              }
+              @case ('auction') {
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="m5 14 5-5 4 4-5 5H5v-4Zm8-8 6 6" />
+                </svg>
+              }
+              @case ('stats') {
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 18V8M11 18V5M17 18v-7M4 18h16" />
+                </svg>
+              }
+              @case ('calendar') {
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M7 4v3M17 4v3M4 9h16M5 6h14v13H5z" />
+                </svg>
+              }
+              @default {
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M6 12h12M12 6v12" />
+                </svg>
+              }
+            }
+          </div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section section-split" id="como-funciona">
+    <div class="section-head">
+      <p class="section-kicker">Como funciona</p>
+      <h2>Veja o produto em acao</h2>
+    </div>
+    <div class="showcase-carousel">
+      <button type="button" class="carousel-nav" aria-label="Anterior" (click)="prevShowcase()">‹</button>
+      <div class="showcase-viewport">
+        <div class="showcase-track" [style.transform]="carouselTransform()">
+          @for (shot of showcases; track $index; let i = $index) {
+            <article class="showcase-slide">
+              <button type="button" class="showcase-card" [style.--shot-accent]="shot.accent" (click)="openShowcase(i)">
+                <div class="showcase-frame">
+                  <div class="frame-top">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <img [src]="shot.image" [alt]="shot.title" class="showcase-image" />
+                </div>
+                <h3>{{ shot.title }}</h3>
+                <p>{{ shot.description }}</p>
+              </button>
+            </article>
+          }
+        </div>
+      </div>
+      <button type="button" class="carousel-nav" aria-label="Proximo" (click)="nextShowcase()">›</button>
+    </div>
+
+    <div class="carousel-dots">
+      @for (page of carouselPages(); track page) {
+        <button
+          type="button"
+          [class.active]="page === currentShowcase()"
+          [attr.aria-label]="'Ir para pagina ' + (page + 1)"
+          (click)="goToShowcase(page)"
+        ></button>
+      }
+    </div>
+  </section>
+
+  <section class="section" id="planos">
+    <div class="section-head">
+      <p class="section-kicker">Planos</p>
+      <h2>Planos para cada fase da sua liga</h2>
+    </div>
+    <div class="plan-grid">
+      @for (plan of plans; track $index) {
+        <article class="plan-card" [class.featured]="plan.featured">
+          <p class="plan-name">{{ plan.name }}</p>
+          <h3>{{ plan.price }}<small>{{ plan.frequency }}</small></h3>
+          <p>{{ plan.description }}</p>
+          <ul>
+            @for (item of plan.items; track $index) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+          <a href="#top" class="btn btn-primary">{{ plan.cta }}</a>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section faq" id="faq">
+    <div class="section-head">
+      <p class="section-kicker">Perguntas frequentes</p>
+      <h2>Perguntas rapidas</h2>
+    </div>
+    <div class="faq-list">
+      @for (faq of faqs; track $index) {
+        <article>
+          <h3>{{ faq.question }}</h3>
+          <p>{{ faq.answer }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section cta">
+    <h2>Pronto para subir o nivel da sua liga?</h2>
+    <p>Ative agora e rode sua temporada em um unico painel.</p>
+    <a href="#top" class="btn btn-primary">Iniciar teste gratuito</a>
+  </section>
+
+  <footer class="footer">
+    <nav class="footer-nav">
+      <a href="#recursos">Recursos</a>
+      <span class="footer-separator">·</span>
+      <a href="#como-funciona">Produto</a>
+      <span class="footer-separator">·</span>
+      <a href="#planos">Planos</a>
+      <span class="footer-separator">·</span>
+      <a href="#faq">FAQ</a>
+      <span class="footer-separator">·</span>
+      <a href="#top">Contato</a>
+    </nav>
+    <p>
+      Gramados Virtuais © 2026. Plataforma para gestao de ligas virtuais no estilo modo carreira.
+    </p>
+    <p class="disclaimer">
+      Projeto independente em evolucao continua, focado em organizadores, managers e comunidades competitivas.
+    </p>
+  </footer>
+
+  @if (activeShowcase(); as activeShot) {
+    <div class="showcase-modal-backdrop" (mousedown)="closeShowcase()">
+      <div class="showcase-modal" (mousedown)="$event.stopPropagation()">
+        <button type="button" class="showcase-modal-close" aria-label="Fechar" (click)="closeShowcase()">×</button>
+        <div class="showcase-card showcase-card-modal" [style.--shot-accent]="activeShot.accent">
+          <div class="showcase-frame">
+            <div class="frame-top">
+              <span></span><span></span><span></span>
+            </div>
+            <img [src]="activeShot.image" [alt]="activeShot.title" class="showcase-image" />
+          </div>
+          <h3>{{ activeShot.title }}</h3>
+          <p>{{ activeShot.description }}</p>
+        </div>
+      </div>
+    </div>
+  }
+</main>

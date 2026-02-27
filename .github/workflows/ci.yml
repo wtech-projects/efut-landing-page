@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  actions: read
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACTIONS_KEY }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/wtech-projects/efut-landing-page
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=long,prefix=
+
+      - name: Copy docker compose to artifacts
+        run: |
+          mkdir -p artifacts
+          cp docker-compose.yml artifacts/docker-compose.yml
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: efut-landing-page
+          path: artifacts
+
+      - name: Build Docker image (PR)
+        if: github.event_name == 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: ghcr.io/wtech-projects/efut-landing-page:pr-${{ github.event.pull_request.number }}
+
+      - name: Build and push Docker image (master)
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACTIONS_KEY }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: efut-landing-page
+          path: artifacts
+
+      - name: Deploy to Docker Swarm
+        run: |
+          SETTINGS_TIMESTAMP=$(date +%s) \
+          IMAGE_TAG=${GITHUB_SHA} \
+          docker stack deploy --with-registry-auth --compose-file artifacts/docker-compose.yml efut

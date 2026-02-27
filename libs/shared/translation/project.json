@@ -1,0 +1,13 @@
+{
+  "name": "translation",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/translation/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["translation"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

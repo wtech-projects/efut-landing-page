@@ -1,11 +1,19 @@
-version: '3.8'
 services:
-  landing-page:
-    image: ghcr.io/wtech-projects/efut-landing-page:master
-    restart: always
+  efut-landing-page:
+    image: ghcr.io/wtech-projects/efut-landing-page:${IMAGE_TAG:-latest}
     networks:
       - cb_network
-    
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    environment:
+      SETTINGS_TIMESTAMP: ${SETTINGS_TIMESTAMP:-0}
+
 networks:
   cb_network:
     external: true
