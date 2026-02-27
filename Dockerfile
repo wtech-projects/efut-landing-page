@@ -1,11 +1,13 @@
-FROM node:20-alpine AS build
+FROM node:20-bookworm-slim AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --legacy-peer-deps --no-audit --no-fund
 
 COPY . .
+ENV NX_CLOUD=false
+ENV NX_DAEMON=false
 RUN npx nx build efut-landing-page-app --configuration=production
 
 FROM nginx:1.27-alpine AS runtime
