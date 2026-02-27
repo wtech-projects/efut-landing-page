@@ -1,5 +1,5 @@
 services:
-  efut-landing-page:
+  landing-page:
     image: ghcr.io/wtech-projects/efut-landing-page:${IMAGE_TAG:-latest}
     networks:
       - cb_network
