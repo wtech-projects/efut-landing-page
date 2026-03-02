@@ -233,7 +233,7 @@ Each feature library manages its own state slice under `+state/<feature>/`:
 
 ## Code Standards
 
-This project enforces **modern Angular** patterns. See [`docs/best-practices.md`](docs/best-practices.md) for the full guide.
+This project enforces **modern Angular** patterns. See [`docs/best-practices.md`](.agents/skills/frontend-specialist/references/best-practices.md) for the full guide.
 
 Key rules:
 
@@ -257,8 +257,8 @@ Key rules:
 
 ## Documentation
 
-- [`docs/best-practices.md`](docs/best-practices.md) — Angular and project coding standards
-- [`docs/workspace-generators.md`](docs/workspace-generators.md) — Nx generator reference
+- [`docs/best-practices.md`](.agents/skills/frontend-specialist/references/best-practices.md) — Angular and project coding standards
+- [`docs/workspace-generators.md`](.agents/skills/frontend-specialist/references/workspace-generators.md) — Nx generator reference
 
 ### Development Skills (Claude Code)
 
@@ -266,8 +266,8 @@ Step-by-step guides for developing correctly in this project:
 
 | Skill | Description |
 |---|---|
-| [`docs/skills/feature-lib.md`](docs/skills/feature-lib.md) | Creating a complete feature library (uses `libs/profile` as reference) |
-| [`docs/skills/lazy-loading.md`](docs/skills/lazy-loading.md) | Lazy loading rules — what to export, how to wire routes, common mistakes |
-| [`docs/skills/ngrx-state.md`](docs/skills/ngrx-state.md) | NgRx state slice pattern — actions, reducer, selectors, effects, module |
-| [`docs/skills/angular-component.md`](docs/skills/angular-component.md) | Modern Angular component patterns — signals, input/output, control flow |
-| [`docs/skills/unit-testing.md`](docs/skills/unit-testing.md) | Unit testing with Jest and Spectator — components, services, effects, reducers |
+| [`docs/skills/feature-lib.md`](.agents/skills/frontend-specialist/references/feature-lib.md) | Creating a complete feature library (uses `libs/profile` as reference) |
+| [`docs/skills/lazy-loading.md`](.agents/skills/frontend-specialist/references/lazy-loading.md) | Lazy loading rules — what to export, how to wire routes, common mistakes |
+| [`docs/skills/ngrx-state.md`](.agents/skills/frontend-specialist/references/ngrx-state.md) | NgRx state slice pattern — actions, reducer, selectors, effects, module |
+| [`docs/skills/angular-component.md`](.agents/skills/frontend-specialist/references/angular-component.md) | Modern Angular component patterns — signals, input/output, control flow |
+| [`docs/skills/unit-testing.md`](.agents/skills/frontend-specialist/references/unit-testing.md) | Unit testing with Jest and Spectator — components, services, effects, reducers |

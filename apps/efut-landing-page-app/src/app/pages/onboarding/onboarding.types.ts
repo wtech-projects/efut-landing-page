@@ -3,6 +3,7 @@ export interface OnboardingStep1Request {
   lastName: string;
   whatsapp: string;
   email: string;
+  humanVerificationToken: string;
 }
 
 export interface OnboardingStep2Request {

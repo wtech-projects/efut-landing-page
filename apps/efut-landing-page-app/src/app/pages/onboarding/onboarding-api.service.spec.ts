@@ -27,6 +27,7 @@ describe('OnboardingApiService', () => {
         lastName: 'Silva',
         whatsapp: '+5511999999999',
         email: 'ana@email.com',
+        humanVerificationToken: 'verification-token',
       })
       .subscribe();
 
@@ -38,6 +39,7 @@ describe('OnboardingApiService', () => {
       lastName: 'Silva',
       whatsapp: '+5511999999999',
       email: 'ana@email.com',
+      humanVerificationToken: 'verification-token',
     });
 
     req.flush({});

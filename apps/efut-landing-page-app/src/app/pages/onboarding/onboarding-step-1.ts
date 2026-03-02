@@ -2,7 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { environment } from '@libs/environment';
 import { OnboardingApiService } from './onboarding-api.service';
+import { RecaptchaService } from './recaptcha.service';
 
 interface CountryPhoneOption {
   code: string;
@@ -21,6 +23,10 @@ interface CountryPhoneOption {
 export class OnboardingStep1Page {
   private readonly formBuilder = inject(FormBuilder);
   private readonly onboardingApiService = inject(OnboardingApiService);
+  private readonly recaptchaService = inject(RecaptchaService);
+
+  private readonly humanVerificationSiteKey = environment.humanVerificationSiteKey;
+
   readonly countryOptions: CountryPhoneOption[] = [
     { code: '+55', flag: '🇧🇷', minDigits: 10, maxDigits: 11, placeholder: '(11) 99999-9999' },
     { code: '+1', flag: '🇺🇸', minDigits: 10, maxDigits: 10, placeholder: '(201) 555-0123' },
@@ -42,11 +48,17 @@ export class OnboardingStep1Page {
   readonly success = signal(false);
   readonly generalError = signal<string | null>(null);
   readonly apiFieldErrors = signal<Record<string, string>>({});
+  readonly humanVerificationError = signal<string | null>(null);
+
+  constructor() {
+    void this.initHumanVerification();
+  }
 
   submit(): void {
     this.submitted.set(true);
     this.generalError.set(null);
     this.apiFieldErrors.set({});
+    this.humanVerificationError.set(null);
     this.validateWhatsappByCountry();
 
     if (this.step1Form.invalid || this.isSubmitting()) {
@@ -56,32 +68,58 @@ export class OnboardingStep1Page {
 
     this.isSubmitting.set(true);
 
-    this.onboardingApiService
-      .submitStep1({
-        firstName: this.step1Form.controls.firstName.value,
-        lastName: this.step1Form.controls.lastName.value,
-        whatsapp: this.buildWhatsappValue(),
-        email: this.step1Form.controls.email.value,
-      })
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        next: () => {
-          this.success.set(true);
-          this.isSubmitting.set(false);
-          this.step1Form.reset({
-            firstName: '',
-            lastName: '',
-            whatsappCountryCode: '+55',
-            whatsapp: '',
-            email: '',
+    void this.recaptchaService
+      .execute(this.humanVerificationSiteKey, 'onboarding_step1_submit')
+      .then((token) => {
+        this.onboardingApiService
+          .submitStep1({
+            firstName: this.step1Form.controls.firstName.value,
+            lastName: this.step1Form.controls.lastName.value,
+            whatsapp: this.buildWhatsappValue(),
+            email: this.step1Form.controls.email.value,
+            humanVerificationToken: token,
+          })
+          .pipe(takeUntilDestroyed())
+          .subscribe({
+            next: () => {
+              this.success.set(true);
+              this.isSubmitting.set(false);
+              this.step1Form.reset({
+                firstName: '',
+                lastName: '',
+                whatsappCountryCode: '+55',
+                whatsapp: '',
+                email: '',
+              });
+            },
+            error: (error: unknown) => {
+              const normalizedError = this.onboardingApiService.normalizeApiError(error);
+              const fieldErrors = { ...normalizedError.fieldErrors };
+
+              if (fieldErrors['humanVerificationToken']) {
+                this.humanVerificationError.set(fieldErrors['humanVerificationToken']);
+                delete fieldErrors['humanVerificationToken'];
+              }
+
+              if ([400, 401, 403].includes(normalizedError.status)) {
+                this.humanVerificationError.set('Falha na verificacao humana. Tente novamente.');
+              }
+
+              if (normalizedError.status === 503) {
+                this.humanVerificationError.set(
+                  'Servico de verificacao temporariamente indisponivel. Tente novamente em instantes.'
+                );
+              }
+
+              this.apiFieldErrors.set(fieldErrors);
+              this.generalError.set(this.getStep1ErrorMessage(normalizedError.status, normalizedError.message));
+              this.isSubmitting.set(false);
+            },
           });
-        },
-        error: (error: unknown) => {
-          const normalizedError = this.onboardingApiService.normalizeApiError(error);
-          this.apiFieldErrors.set(normalizedError.fieldErrors);
-          this.generalError.set(this.getStep1ErrorMessage(normalizedError.status, normalizedError.message));
-          this.isSubmitting.set(false);
-        },
+      })
+      .catch(() => {
+        this.humanVerificationError.set('Nao foi possivel validar reCAPTCHA v3. Tente novamente.');
+        this.isSubmitting.set(false);
       });
   }
 
@@ -157,6 +195,20 @@ export class OnboardingStep1Page {
 
   currentPhonePlaceholder(): string {
     return this.selectedCountryOption().placeholder;
+  }
+
+  private async initHumanVerification(): Promise<void> {
+    if (!this.humanVerificationSiteKey || this.humanVerificationSiteKey.includes('REPLACE_')) {
+      this.humanVerificationError.set('reCAPTCHA v3 nao configurado para este ambiente.');
+      return;
+    }
+
+    try {
+      await this.recaptchaService.loadApi(this.humanVerificationSiteKey);
+      this.humanVerificationError.set(null);
+    } catch {
+      this.humanVerificationError.set('Nao foi possivel carregar reCAPTCHA v3.');
+    }
   }
 
   private getStep1ErrorMessage(status: number, fallbackMessage: string): string {
