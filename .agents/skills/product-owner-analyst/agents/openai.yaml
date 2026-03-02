@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Owner Analyst"
+  short_description: "Create robust GitHub issue user stories."
+  default_prompt: "Analyze client requirements and repository architecture, collaborate with relevant specialist skills, and produce complete GitHub issue user stories with acceptance criteria and implementation context."

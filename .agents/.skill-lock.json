@@ -1,0 +1,24 @@
+{
+  "version": 3,
+  "skills": {
+    "Spring Boot Best Practices": {
+      "source": "kousen/claude-code-training",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/kousen/claude-code-training.git",
+      "skillPath": "skills-and-plugins/spring-boot-skill/SKILL.md",
+      "skillFolderHash": "e86da65f56b0a4e554bc08d69aecbf8d33a44d7f",
+      "installedAt": "2026-03-02T12:43:36.562Z",
+      "updatedAt": "2026-03-02T12:43:36.562Z"
+    },
+    "git-commit": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/awesome-copilot.git",
+      "skillPath": "skills/git-commit/SKILL.md",
+      "skillFolderHash": "883a6a7466f55a9cd9f22cf1cce2d9333fc9b998",
+      "installedAt": "2026-03-02T12:56:47.301Z",
+      "updatedAt": "2026-03-02T12:56:47.301Z"
+    }
+  },
+  "dismissed": {}
+}
