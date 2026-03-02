@@ -90,10 +90,6 @@
           }
 
           <section class="human-verification">
-            <p class="human-verification-title">Verificacao humana</p>
-            <p class="human-verification-caption">
-              Esta pagina e protegida por Google reCAPTCHA v3 para prevencao contra abuso automatizado.
-            </p>
             @if (humanVerificationError(); as message) {
               <span class="field-message error">{{ message }}</span>
             } @else {
