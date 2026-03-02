@@ -162,6 +162,7 @@ export class HomePage {
       frequency: '/mes',
       description: 'Para ligas pequenas iniciando no modo carreira.',
       cta: 'Criar uma liga',
+      route: '/onboarding',
       featured: false,
       items: [
         '1 liga ativa',
@@ -177,6 +178,7 @@ export class HomePage {
       frequency: '/mes',
       description: 'Para ligas em crescimento e operacao diaria.',
       cta: 'Assinar plano Pro',
+      href: '#top',
       featured: true,
       items: [
         'Ate 5 ligas ativas',
@@ -193,6 +195,7 @@ export class HomePage {
       frequency: '',
       description: 'Para grandes redes de campeonatos e federacoes.',
       cta: 'Falar com vendas',
+      href: '#top',
       featured: false,
       items: ['Ligas ilimitadas', 'Integracoes', 'Gestao dedicada']
     }

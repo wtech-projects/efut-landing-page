@@ -4,16 +4,14 @@
       <div class="brand-hero">
         <img src="/gramados-virtuais.png" alt="Logo Gramados Virtuais" class="brand-logo" />
       </div>
-      <p class="hero-kicker">Plataforma para gestores de ligas virtuais</p>
       <h1>Sua liga virtual, operada com padrao profissional.</h1>
       <p class="hero-description">
         Mercado, jogos, ranking e financeiro no mesmo sistema.
       </p>
 
       <div class="hero-actions">
-        <a href="#planos" class="btn btn-primary">Criar uma liga</a>
+        <a routerLink="/onboarding" class="btn btn-primary">Criar liga</a>
         <a href="#como-funciona" class="btn btn-ghost">Ver demonstracao</a>
-        <a routerLink="/blog" class="btn btn-ghost">Visitar blog</a>
       </div>
 
     </div>
@@ -174,7 +172,11 @@
               <li>{{ item }}</li>
             }
           </ul>
-          <a href="#top" class="btn btn-primary">{{ plan.cta }}</a>
+          @if (plan.route) {
+            <a [routerLink]="plan.route" class="btn btn-primary">{{ plan.cta }}</a>
+          } @else {
+            <a [href]="plan.href" class="btn btn-primary">{{ plan.cta }}</a>
+          }
         </article>
       }
     </div>

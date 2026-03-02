@@ -4,6 +4,10 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve efut-landing-page-app",
+    "start:local": "nx serve efut-landing-page-app --configuration=local",
+    "start:prod": "nx serve efut-landing-page-app --configuration=production",
+    "build:local": "nx build efut-landing-page-app --configuration=local",
+    "build:prod": "nx build efut-landing-page-app --configuration=production",
     "lint:all": "npx nx run-many --target=lint --all",
     "test": "nx test",
     "test:all": "npx nx run-many --target=test --all"

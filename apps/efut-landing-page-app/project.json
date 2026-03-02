@@ -58,6 +58,17 @@
               "with": "libs/environment/src/lib/environment.development.ts"
             }
           ]
+        },
+        "local": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "fileReplacements": [
+            {
+              "replace": "libs/environment/src/lib/environment.ts",
+              "with": "libs/environment/src/lib/environment.local.ts"
+            }
+          ]
         }
       },
       "defaultConfiguration": "production"
@@ -71,6 +82,9 @@
         },
         "development": {
           "buildTarget": "efut-landing-page-app:build:development"
+        },
+        "local": {
+          "buildTarget": "efut-landing-page-app:build:local"
         }
       },
       "defaultConfiguration": "development"

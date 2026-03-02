@@ -1,0 +1,85 @@
+<main class="onboarding-page">
+  <section class="onboarding-shell">
+    <a routerLink="/" class="back-link" aria-label="Voltar para home">
+      <span class="back-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M15 6 9 12l6 6" />
+        </svg>
+      </span>
+      <span>Voltar para home</span>
+    </a>
+
+    <header>
+      <p class="kicker">Criar liga · Etapa 2 de 2</p>
+      <h1>Finalize a criacao da liga</h1>
+      <p>Defina os dados da liga e do administrador para concluir o onboarding.</p>
+    </header>
+
+    <section class="onboarding-card">
+      @if (!hasToken()) {
+        <article class="state-card error">
+          <h2>Link invalido</h2>
+          <p>Este link nao possui token de continuacao. Reinicie o processo em Criar liga.</p>
+          <a routerLink="/onboarding" class="btn-link">Reiniciar onboarding</a>
+        </article>
+      } @else if (success()) {
+        <article class="state-card success">
+          <h2>Onboarding concluido</h2>
+          <p>Sua liga foi recebida com sucesso. Voce recebera novas instrucoes por e-mail.</p>
+        </article>
+      } @else {
+        <form [formGroup]="step2Form" (ngSubmit)="submit()" novalidate>
+          <label>
+          Nome da liga
+          <input type="text" formControlName="leagueName" />
+          @if (fieldError('leagueName'); as message) {
+            <span class="field-message error">{{ message }}</span>
+          } @else {
+            <span class="field-message" aria-hidden="true"> </span>
+          }
+          </label>
+
+          <div class="grid-two">
+            <label>
+            Login do administrador
+            <input type="text" formControlName="adminLogin" autocomplete="username" />
+            @if (fieldError('adminLogin'); as message) {
+              <span class="field-message error">{{ message }}</span>
+            } @else {
+              <span class="field-message" aria-hidden="true"> </span>
+            }
+            </label>
+
+            <label>
+            Senha do administrador
+            <input type="password" formControlName="adminPassword" autocomplete="new-password" />
+            @if (fieldError('adminPassword'); as message) {
+              <span class="field-message error">{{ message }}</span>
+            } @else {
+              <span class="field-message" aria-hidden="true"> </span>
+            }
+            </label>
+          </div>
+
+          <label>
+          Logo (PNG ou JPEG ate 5MB)
+          <input type="file" accept="image/png,image/jpeg" (change)="onLogoSelected($event)" />
+          @if (fieldError('logo'); as message) {
+            <span class="field-message error">{{ message }}</span>
+          } @else {
+            <span class="field-message" aria-hidden="true"> </span>
+          }
+          </label>
+
+          @if (generalError(); as message) {
+            <p class="state-card error">{{ message }}</p>
+          }
+
+          <button type="submit" class="btn-submit" [disabled]="isSubmitting()">
+            {{ isSubmitting() ? 'Enviando...' : 'Concluir onboarding' }}
+          </button>
+        </form>
+      }
+    </section>
+  </section>
+</main>
