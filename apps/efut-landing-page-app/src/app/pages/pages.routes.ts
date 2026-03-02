@@ -6,6 +6,9 @@ export const genaiPagesRoutes: Routes = [
     path: '',
     component: HomePage
   }, {
+    path: 'blog',
+    loadChildren: () => import('./blog/blog.routes').then((m) => m.blogRoutes)
+  }, {
     path: 'profile',
     loadChildren: () => import('@libs/profile').then(m => m.profileRoutes)
   }

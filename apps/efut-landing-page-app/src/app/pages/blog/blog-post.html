@@ -1,0 +1,35 @@
+<main class="post-page">
+  <a routerLink="/blog" class="back-link">← Back to blog</a>
+
+  @if (post(); as currentPost) {
+    <article class="post-shell">
+      <p class="post-meta">{{ currentPost.publishedAt | date: 'MMMM d, y' }} · {{ currentPost.author }}</p>
+      <h1>{{ currentPost.title }}</h1>
+      <p class="post-excerpt">{{ currentPost.excerpt }}</p>
+      <img [src]="currentPost.cover" [alt]="currentPost.title" class="hero-image" />
+
+      <div class="post-body">
+        @for (paragraph of currentPost.content; track $index) {
+          <p>{{ paragraph }}</p>
+        }
+      </div>
+
+      <section class="share-box">
+        <h2>Share this post</h2>
+        <p class="share-url">{{ shareUrl() }}</p>
+        <div class="share-links">
+          <a [href]="whatsappLink()" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a [href]="xLink()" target="_blank" rel="noopener noreferrer">X</a>
+          <a [href]="facebookLink()" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a [href]="linkedInLink()" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </section>
+    </article>
+  } @else {
+    <section class="not-found">
+      <h1>Post not found</h1>
+      <p>The link you opened does not exist anymore.</p>
+      <a routerLink="/blog">Go to blog</a>
+    </section>
+  }
+</main>

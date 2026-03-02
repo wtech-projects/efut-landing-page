@@ -1,0 +1,43 @@
+<main class="blog-page">
+  <div class="blog-shell">
+    <a routerLink="/" class="back-link">← Back to home</a>
+
+    <header class="blog-header">
+      <h1>⟩ Blog</h1>
+      <p>Updates, insights, and league news from Gramados Virtuais.</p>
+    </header>
+
+    <section class="post-list">
+      @for (post of posts; track post.slug) {
+        <article class="post-item">
+          <p class="post-meta">{{ post.publishedAt | date: 'MMMM d, y' }} · 3 min read</p>
+          <h2>
+            <a [routerLink]="['/blog', post.slug]">{{ post.title }}</a>
+          </h2>
+          <p class="post-excerpt">{{ post.excerpt }}</p>
+          <footer class="post-item-footer">
+            <div class="post-tags">
+              @for (tag of post.hashtags; track tag) {
+                <span>{{ tag }}</span>
+              }
+            </div>
+            <div class="post-author">
+              <img [src]="post.authorImage" [alt]="post.author" />
+              <span>{{ post.author }}</span>
+            </div>
+          </footer>
+        </article>
+      }
+    </section>
+
+    <footer class="blog-footer">
+      <a routerLink="/">Home</a>
+      <span>·</span>
+      <a href="/#recursos">Recursos</a>
+      <span>·</span>
+      <a href="/#planos">Planos</a>
+      <span>·</span>
+      <a href="/#faq">FAQ</a>
+    </footer>
+  </div>
+</main>
