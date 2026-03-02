@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -24,6 +24,7 @@ export class OnboardingStep1Page {
   private readonly formBuilder = inject(FormBuilder);
   private readonly onboardingApiService = inject(OnboardingApiService);
   private readonly recaptchaService = inject(RecaptchaService);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly humanVerificationSiteKey = environment.humanVerificationSiteKey;
 
@@ -79,7 +80,7 @@ export class OnboardingStep1Page {
             email: this.step1Form.controls.email.value,
             humanVerificationToken: token,
           })
-          .pipe(takeUntilDestroyed())
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => {
               this.success.set(true);
