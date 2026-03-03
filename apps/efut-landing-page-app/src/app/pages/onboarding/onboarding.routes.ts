@@ -8,6 +8,11 @@ export const onboardingRoutes: Routes = [
     component: OnboardingStep1Page,
   },
   {
+    path: 'continue',
+    redirectTo: 'continuar',
+    pathMatch: 'full',
+  },
+  {
     path: 'continuar',
     component: OnboardingStep2Page,
   },
