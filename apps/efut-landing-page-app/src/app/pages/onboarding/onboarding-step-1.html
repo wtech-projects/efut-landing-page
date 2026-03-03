@@ -19,7 +19,7 @@
       @if (success()) {
         <article class="state-card success">
           <h2>Cadastro inicial concluido</h2>
-          <p>Enviamos um link para o seu e-mail. Abra o link para continuar na etapa 2.</p>
+          <p>Enviamos um link para o seu e-mail. Abra o link para continuar com o cadastro da liga.</p>
         </article>
       } @else {
         <form [formGroup]="step1Form" (ngSubmit)="submit()" novalidate>
