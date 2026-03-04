@@ -33,6 +33,7 @@
           <span class="field-title">Logo (PNG ou JPEG até 5MB)</span>
           <label class="logo-upload" for="logo-upload-input" aria-label="Clique para enviar o logo da liga">
             <input
+              #logoInput
               id="logo-upload-input"
               class="visually-hidden-file"
               type="file"
@@ -49,6 +50,9 @@
               </div>
             }
           </label>
+          @if (selectedLogoPreviewUrl()) {
+            <button type="button" class="btn-clear-logo" (click)="clearSelectedLogo(logoInput)">Remover logo</button>
+          }
 
           @if (fieldError('logo'); as message) {
             <span class="field-message error">{{ message }}</span>

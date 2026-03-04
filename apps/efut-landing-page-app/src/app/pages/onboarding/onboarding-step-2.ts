@@ -267,6 +267,14 @@ export class OnboardingStep2Page {
     this.validateLogo(file, fileSignature);
   }
 
+  clearSelectedLogo(fileInput: HTMLInputElement): void {
+    fileInput.value = '';
+    this.step2Form.controls.logo.setValue(null);
+    this.step2Form.controls.logo.setErrors({ required: true });
+    this.clearLogoPreviewUrl();
+    this.resetLogoValidationState();
+  }
+
   fieldError(fieldName: string): string | null {
     const backendError = this.apiFieldErrors()[fieldName];
     if (backendError) {

@@ -170,6 +170,22 @@ input[type='file'] {
   cursor: pointer;
 }
 
+.btn-clear-logo {
+  border: 1px solid rgba(229, 240, 239, 0.2);
+  border-radius: 999px;
+  background: transparent;
+  color: #ffb3b3;
+  font-size: 0.78rem;
+  padding: 0.4rem 0.72rem;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.btn-clear-logo:hover {
+  border-color: rgba(255, 179, 179, 0.6);
+  color: #ffd0d0;
+}
+
 .logo-preview {
   position: relative;
   width: 10rem;
