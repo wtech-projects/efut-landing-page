@@ -11,33 +11,79 @@
 
     <header>
       <p class="kicker">Criar liga · Etapa 2 de 2</p>
-      <h1>Finalize a criacao da liga</h1>
+      <h1>Finalize a criação da liga</h1>
       <p>Defina os dados da liga e do administrador para concluir o onboarding.</p>
     </header>
 
     <section class="onboarding-card">
       @if (!hasToken()) {
         <article class="state-card error">
-          <h2>Link invalido</h2>
-          <p>Este link nao possui token de continuacao. Reinicie o processo em Criar liga.</p>
+          <h2>Link inválido</h2>
+          <p>Este link não possui token de continuação. Reinicie o processo em Criar liga.</p>
           <a routerLink="/onboarding" class="btn-link">Reiniciar onboarding</a>
         </article>
       } @else if (success()) {
         <article class="state-card success">
-          <h2>Onboarding concluido</h2>
-          <p>Sua liga foi recebida com sucesso. Voce recebera novas instrucoes por e-mail.</p>
+          <h2>Onboarding concluído</h2>
+          <p>Sua liga foi recebida com sucesso. Você receberá novas instruções por e-mail.</p>
         </article>
       } @else {
         <form [formGroup]="step2Form" (ngSubmit)="submit()" novalidate>
-          <label>
-          Nome da liga
-          <input type="text" formControlName="leagueName" />
-          @if (fieldError('leagueName'); as message) {
-            <span class="field-message error">{{ message }}</span>
-          } @else {
-            <span class="field-message" aria-hidden="true"> </span>
-          }
+          <div class="logo-field">
+          <span class="field-title">Logo (PNG ou JPEG até 5MB)</span>
+          <label class="logo-upload" for="logo-upload-input" aria-label="Clique para enviar o logo da liga">
+            <input
+              id="logo-upload-input"
+              class="visually-hidden-file"
+              type="file"
+              accept="image/png,image/jpeg"
+              (change)="onLogoSelected($event)"
+            />
+            @if (selectedLogoPreviewUrl(); as previewUrl) {
+              <div class="logo-preview has-image">
+                <img [src]="previewUrl" alt="Pre-visualizacao do logo selecionado" />
+              </div>
+            } @else {
+              <div class="logo-preview">
+                <span>Clique para enviar a logo da sua liga</span>
+              </div>
+            }
           </label>
+
+          @if (fieldError('logo'); as message) {
+            <span class="field-message error">{{ message }}</span>
+          } @else if (logoValidationState() === 'validating') {
+            <span class="field-message info">{{ logoValidationHint() }}</span>
+          } @else if (logoValidationState() === 'valid') {
+            <span class="field-message success">{{ logoValidationHint() }}</span>
+          } @else {
+            <span class="field-message hint">{{ logoValidationHint() }}</span>
+          }
+          </div>
+
+          <div class="grid-two">
+            <label>
+            Nome da liga
+            <input type="text" formControlName="leagueName" />
+            @if (fieldError('leagueName'); as message) {
+              <span class="field-message error">{{ message }}</span>
+            } @else if (leagueNameValidationState() === 'validating') {
+              <span class="field-message info">{{ leagueNameValidationHint() }}</span>
+            } @else if (leagueNameValidationState() === 'available') {
+              <span class="field-message success">{{ leagueNameValidationHint() }}</span>
+            } @else if (leagueNameValidationState() === 'unavailable' || leagueNameValidationState() === 'error') {
+              <span class="field-message error">{{ leagueNameValidationHint() }}</span>
+            } @else {
+              <span class="field-message hint">{{ leagueNameValidationHint() }}</span>
+            }
+            </label>
+
+            <label>
+            Domínio
+            <input type="text" [value]="leagueDomainPreview()" readonly class="readonly-input" />
+            <span class="field-message hint">Gerado automaticamente a partir do nome da liga.</span>
+            </label>
+          </div>
 
           <div class="grid-two">
             <label>
@@ -51,9 +97,14 @@
             </label>
 
             <label>
-            Senha do administrador
-            <input type="password" formControlName="adminPassword" autocomplete="new-password" />
-            @if (fieldError('adminPassword'); as message) {
+            Estado
+            <select formControlName="state">
+              <option value="">Selecione</option>
+              @for (uf of brazilStates; track uf) {
+                <option [value]="uf">{{ uf }}</option>
+              }
+            </select>
+            @if (fieldError('state'); as message) {
               <span class="field-message error">{{ message }}</span>
             } @else {
               <span class="field-message" aria-hidden="true"> </span>
@@ -61,23 +112,49 @@
             </label>
           </div>
 
-          <label>
-          Logo (PNG ou JPEG ate 5MB)
-          <input type="file" accept="image/png,image/jpeg" (change)="onLogoSelected($event)" />
-          @if (fieldError('logo'); as message) {
-            <span class="field-message error">{{ message }}</span>
-          } @else {
-            <span class="field-message" aria-hidden="true"> </span>
-          }
-          </label>
+          <div class="grid-two">
+            <label>
+            Senha do administrador
+            <input type="password" formControlName="adminPassword" autocomplete="new-password" />
+            <app-password-strength-indicator [strength]="passwordStrength()" />
+            @if (fieldError('adminPassword'); as message) {
+              <span class="field-message error">{{ message }}</span>
+            } @else {
+              <span class="field-message" aria-hidden="true"> </span>
+            }
+            </label>
+
+            <label>
+            Confirmar senha
+            <input type="password" formControlName="confirmAdminPassword" autocomplete="new-password" />
+            @if (fieldError('confirmAdminPassword'); as message) {
+              <span class="field-message error">{{ message }}</span>
+            } @else {
+              <span class="field-message" aria-hidden="true"> </span>
+            }
+            </label>
+          </div>
 
           @if (generalError(); as message) {
             <p class="state-card error">{{ message }}</p>
           }
 
-          <button type="submit" class="btn-submit" [disabled]="isSubmitting()">
-            {{ isSubmitting() ? 'Enviando...' : 'Concluir onboarding' }}
-          </button>
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn-submit"
+              [disabled]="
+                isSubmitting() ||
+                leagueNameValidationState() !== 'available' ||
+                logoValidationState() === 'idle' ||
+                logoValidationState() === 'validating' ||
+                logoValidationState() === 'invalid' ||
+                step2Form.invalid
+              "
+            >
+              {{ isSubmitting() ? 'Enviando...' : 'Concluir' }}
+            </button>
+          </div>
         </form>
       }
     </section>

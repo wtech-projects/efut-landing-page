@@ -5,6 +5,9 @@ import { Observable } from 'rxjs';
 import {
   OnboardingApiError,
   OnboardingFieldError,
+  OnboardingLeagueNameValidationRequest,
+  OnboardingLeagueNameValidationResult,
+  OnboardingLogoValidationResult,
   OnboardingStep1Request,
   OnboardingStep2Request,
 } from './onboarding.types';
@@ -28,10 +31,27 @@ export class OnboardingApiService {
     return this.httpClient.post<void>(`${this.apiBaseUrl}/step-2`, this.buildStep2FormData(payload));
   }
 
+  validateStep2Logo(logo: File): Observable<OnboardingLogoValidationResult> {
+    const formData = new FormData();
+    formData.append('logo', logo);
+
+    return this.httpClient.post<OnboardingLogoValidationResult>(`${this.apiBaseUrl}/step-2/logo-validation`, formData);
+  }
+
+  validateStep2LeagueName(
+    payload: OnboardingLeagueNameValidationRequest
+  ): Observable<OnboardingLeagueNameValidationResult> {
+    return this.httpClient.post<OnboardingLeagueNameValidationResult>(
+      `${this.apiBaseUrl}/step-2/league-name-validation`,
+      payload
+    );
+  }
+
   buildStep2FormData(payload: OnboardingStep2Request): FormData {
     const formData = new FormData();
     formData.append('token', payload.token);
     formData.append('leagueName', payload.leagueName);
+    formData.append('state', payload.state);
     formData.append('adminLogin', payload.adminLogin);
     formData.append('adminPassword', payload.adminPassword);
     formData.append('logo', payload.logo);
@@ -52,7 +72,7 @@ export class OnboardingApiService {
 
     return {
       status: error.status || apiError.status || 0,
-      message: apiError.message ?? 'Nao foi possivel concluir a solicitacao.',
+      message: apiError.message ?? 'Não foi possível concluir a solicitação.',
       fieldErrors: this.toFieldErrorMap(apiError.fieldErrors ?? []),
     };
   }
