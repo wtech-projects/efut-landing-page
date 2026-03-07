@@ -25,7 +25,7 @@
       } @else if (success()) {
         <article class="state-card success">
           <h2>Cadastro concluído</h2>
-          <p>Sua liga foi recebida com sucesso. Você receberá novas instruções por e-mail.</p>
+          <p>Sua liga foi recebida com sucesso. O processo de criação do painel leva cerca de 15 minutos e, após a criação, você receberá um e-mail com as informações de acesso.</p>
         </article>
       } @else {
         <form [formGroup]="step2Form" (ngSubmit)="submit()" novalidate>
